@@ -6,7 +6,7 @@
 
 const API = require('../api');
 const RuleUtils = require('./RuleUtils');
-const TimeTriggerBlock = require('./TimeTriggerBlock');
+const Units = require('../units');
 
 class Rule {
   /**
@@ -137,8 +137,7 @@ class Rule {
     }
 
     if (trigger.type === 'TimeTrigger') {
-      return `the time of day is ${
-        TimeTriggerBlock.utcToLocal(trigger.time)}`;
+      return `the time of day is ${trigger.time}`;
     }
 
     if (trigger.type === 'EventTrigger') {
@@ -163,6 +162,11 @@ class Rule {
       return null;
     }
 
+    let convertedValue;
+    if (trigger.hasOwnProperty('value')) {
+      convertedValue = Units.convert(trigger.value, triggerProp.unit).value;
+    }
+
     let triggerStr = `${triggerThing.title} `;
     if (trigger.type === 'BooleanTrigger') {
       triggerStr += 'is ';
@@ -184,9 +188,9 @@ class Rule {
       } else {
         triggerStr += 'greater than ';
       }
-      triggerStr += trigger.value;
+      triggerStr += `${convertedValue}`;
     } else if (trigger.type === 'EqualityTrigger') {
-      triggerStr += `${trigger.label} is ${trigger.value}`;
+      triggerStr += `${trigger.label} is ${convertedValue}`;
     } else {
       console.error('Unknown trigger type', trigger);
       return null;
@@ -274,7 +278,7 @@ class Rule {
       }
     } else {
       effectStr += `set ${effectThing.title} ${effect.label} to `;
-      effectStr += effect.value;
+      effectStr += `${Units.convert(effect.value, effectProp.unit).value}`;
     }
     return effectStr;
   }

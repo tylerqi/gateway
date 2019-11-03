@@ -186,6 +186,19 @@ class NumberProperty extends BaseComponent {
   }
 
   set value(value) {
+    let step = this.step;
+    if (step !== '' && step !== 'any') {
+      step = parseFloat(step);
+      value = Math.round(value / step) * step;
+
+      let precision = 0;
+      if (`${step}`.includes('.')) {
+        precision = `${step}`.split('.')[1].length;
+      }
+
+      value = value.toFixed(precision);
+    }
+
     this._input.value = value;
   }
 
@@ -225,7 +238,8 @@ class NumberProperty extends BaseComponent {
     const min = parseInt(this.min, 10);
     const max = parseInt(this.max, 10);
 
-    if (isNaN(min) || min === null || isNaN(max) || max === null) {
+    if (isNaN(min) || min === null || isNaN(max) || max === null ||
+        this.step === '' || this.step === 'any') {
       this._input.classList.add('hide-spinner');
 
       if (this._haveClickListener) {

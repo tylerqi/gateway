@@ -1,5 +1,6 @@
 const fs = require('fs');
 
+const {waitForExpect} = require('../expect-utils');
 const {getBrowser} = require('./browser-common');
 const AddonManager = require('../../addon-manager');
 
@@ -51,8 +52,10 @@ describe('basic browser tests', () => {
     const menuButton = await browser.$('#menu-button');
     await menuButton.waitForExist(5000);
 
-    const newUrl = await browser.getUrl();
-    expect(newUrl.endsWith('/things')).toBeTruthy();
+    await waitForExpect(async () => {
+      const newUrl = await browser.getUrl();
+      expect(newUrl.endsWith('/things')).toBeTruthy();
+    });
 
     // Wait for the connectivity scrim to appear, then hide it (and wait for the
     // transition to finish).
@@ -79,6 +82,10 @@ describe('basic browser tests', () => {
     // wait fadeout menu-scrim
     await browser.waitUntil(async () => {
       const menuScrim = await browser.$('#menu-scrim.hidden');
+      if (!menuScrim || !menuScrim.isExisting()) {
+        return false;
+      }
+
       const width = await menuScrim.getCSSProperty('width');
       return width && width.parsed && width.parsed.value === 0;
     }, 5000);
@@ -113,6 +120,10 @@ describe('basic browser tests', () => {
     // wait fadeout menu-scrim
     await browser.waitUntil(async () => {
       const menuScrim = await browser.$('#menu-scrim.hidden');
+      if (!menuScrim || !menuScrim.isExisting()) {
+        return false;
+      }
+
       const width = await menuScrim.getCSSProperty('width');
       return width && width.parsed && width.parsed.value === 0;
     }, 5000);
