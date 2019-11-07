@@ -44,11 +44,11 @@ module.exports = {
         mozillaTunnelService: true,
         localControl: {
           mdnsServiceType: 'http',
-          mdnsServiceName: 'Mozilla WebThings Gateway',
+          mdnsServiceName: 'Mozilla WebThings 网关',
           mdnsServiceDomain: os.hostname().split('.')[0],
 
           mdnsTxt: {
-            desc: 'Web of Things Gateway',
+            desc: 'Web of Things 网关',
             protocol: 'http, https, Web Sockets',
             power: '6 watts',
           },
@@ -72,7 +72,7 @@ module.exports = {
   wifi: {
     ap: {
       ipaddr: '192.168.2.1',
-      ssid_base: 'WebThings Gateway',
+      ssid_base: '智能网关',
     },
   },
   oauthPostToken: false,
